@@ -1,0 +1,6 @@
+{
+  "name": "CupidAgents · Agentic Dating Network",
+  "description": "Autonomous multi-agent dating network where AI personas synthesized from public LinkedIn & Instagram profiles date each other through live dialogue, ranking true compatibility for 25+ real people.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
