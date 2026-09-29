@@ -10,10 +10,11 @@ import { IngestModal } from './components/IngestModal';
 import { TechStackModal } from './components/TechStackModal';
 import { VideoGuideModal } from './components/VideoGuideModal';
 import { HowItWorksModal } from './components/HowItWorksModal';
+import { AIVoiceDemoPlayer } from './components/AIVoiceDemoPlayer';
 import { 
   Sparkles, Heart, Search, Filter, Users, MessageSquareHeart, 
   Award, ArrowRight, Zap, CheckCircle2, Globe, Shield, RefreshCw,
-  Flame, MapPin, Compass
+  Flame, MapPin, Compass, Mic, Video
 } from 'lucide-react';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
   const [isTechStackOpen, setIsTechStackOpen] = useState(false);
   const [isVideoGuideOpen, setIsVideoGuideOpen] = useState(false);
   const [isHowItWorksOpen, setIsHowItWorksOpen] = useState(false);
+  const [isVoiceDemoOpen, setIsVoiceDemoOpen] = useState(false);
 
   // Active dates / rankings selection
   const [activePersonAId, setActivePersonAId] = useState<string>('brian-chesky');
@@ -54,8 +56,19 @@ export default function App() {
     setActiveView('date');
   };
 
+  const handleLaunchDatePairById = (personAId: string, personBId: string) => {
+    setActivePersonAId(personAId);
+    setActivePersonBId(personBId);
+    setActiveView('date');
+  };
+
   const handleViewRankingsFor = (person: Person) => {
     setRankingsTargetId(person.id);
+    setActiveView('rankings');
+  };
+
+  const handleNavigateToRankingsById = (personId: string) => {
+    setRankingsTargetId(personId);
     setActiveView('rankings');
   };
 
@@ -101,6 +114,8 @@ export default function App() {
         onOpenTechStack={() => setIsTechStackOpen(true)}
         onOpenVideoGuide={() => setIsVideoGuideOpen(true)}
         onOpenHowItWorks={() => setIsHowItWorksOpen(true)}
+        onToggleVoiceDemo={() => setIsVoiceDemoOpen(prev => !prev)}
+        isVoiceDemoActive={isVoiceDemoOpen}
         totalPeopleCount={people.length}
       />
 
@@ -135,40 +150,50 @@ export default function App() {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
+                {/* 3-Minute AI Voice Demo Primary Call to Action */}
+                <button
+                  onClick={() => setIsVoiceDemoOpen(true)}
+                  className="px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center space-x-2 transition bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white shadow-xl shadow-rose-950/60 ring-1 ring-rose-400/40 hover:scale-[1.02]"
+                >
+                  <span className="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                  <Sparkles className="w-4 h-4 text-amber-200" />
+                  <span>3-Min AI Voice Demo</span>
+                </button>
+
                 <button
                   onClick={() => setActiveView('people')}
-                  className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
+                  className={`px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
                     activeView === 'people'
                       ? 'bg-rose-500 text-white shadow-lg shadow-rose-950/50'
                       : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-700/80'
                   }`}
                 >
                   <Users className="w-4 h-4" />
-                  <span>Browse Directory ({people.length})</span>
+                  <span>Directory ({people.length})</span>
                 </button>
 
                 <button
                   onClick={() => setActiveView('date')}
-                  className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
+                  className={`px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
                     activeView === 'date'
                       ? 'bg-rose-500 text-white shadow-lg shadow-rose-950/50'
                       : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-700/80'
                   }`}
                 >
                   <MessageSquareHeart className="w-4 h-4 text-rose-400" />
-                  <span>Simulate a Date</span>
+                  <span>Live Date</span>
                 </button>
 
                 <button
                   onClick={() => setActiveView('rankings')}
-                  className={`px-5 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
+                  className={`px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm flex items-center space-x-2 transition ${
                     activeView === 'rankings'
                       ? 'bg-rose-500 text-white shadow-lg shadow-rose-950/50'
                       : 'bg-neutral-900 hover:bg-neutral-800 text-neutral-200 border border-neutral-700/80'
                   }`}
                 >
                   <Award className="w-4 h-4 text-amber-400" />
-                  <span>View Compatibility Matrix</span>
+                  <span>Rankings</span>
                 </button>
               </div>
             </div>
@@ -386,6 +411,14 @@ export default function App() {
               >
                 3-Min Demo Walkthrough
               </button>
+              <span className="text-neutral-700">•</span>
+              <button
+                onClick={() => setIsVoiceDemoOpen(true)}
+                className="text-rose-400 hover:text-rose-300 font-semibold flex items-center space-x-1 transition"
+              >
+                <Mic className="w-3 h-3" />
+                <span>AI Voice Bot Demo</span>
+              </button>
             </div>
 
           </div>
@@ -396,6 +429,29 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* Floating AI Voice Bot Quick Trigger */}
+      {!isVoiceDemoOpen && (
+        <button
+          onClick={() => setIsVoiceDemoOpen(true)}
+          className="fixed bottom-6 right-6 z-40 px-4 py-2.5 rounded-full bg-neutral-900/95 hover:bg-neutral-800 text-white border border-rose-500/40 shadow-2xl shadow-rose-950/50 flex items-center space-x-2.5 group backdrop-blur-md hover:scale-105 transition-all"
+          title="Open 3-Minute AI Voice Demonstration"
+        >
+          <div className="relative">
+            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-rose-500 to-amber-400 flex items-center justify-center shadow">
+              <Mic className="w-3.5 h-3.5 text-white" />
+            </div>
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+          </div>
+          <div className="text-left">
+            <div className="text-xs font-bold text-white flex items-center space-x-1">
+              <span>3-Min AI Demo Bot</span>
+              <Sparkles className="w-3 h-3 text-rose-400" />
+            </div>
+            <div className="text-[10px] text-neutral-400 font-mono-code">Play voice narration</div>
+          </div>
+        </button>
+      )}
 
       {/* Profile Detail Inspector Modal */}
       <ProfileModal
@@ -437,6 +493,18 @@ export default function App() {
             setActiveView(section);
           }
         }}
+        onLaunchVoiceDemo={() => setIsVoiceDemoOpen(true)}
+      />
+
+      {/* 3-Minute Synchronized AI Voice Demo Player */}
+      <AIVoiceDemoPlayer
+        isOpen={isVoiceDemoOpen}
+        onClose={() => setIsVoiceDemoOpen(false)}
+        people={people}
+        onInspectPerson={handleInspectPerson}
+        onNavigateToDate={handleLaunchDatePairById}
+        onNavigateToRankings={handleNavigateToRankingsById}
+        onOpenIngest={() => setIsIngestOpen(true)}
       />
 
     </div>

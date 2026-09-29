@@ -5,12 +5,14 @@ interface VideoGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
   onJumpToSection: (section: 'people' | 'date' | 'rankings' | 'ingest') => void;
+  onLaunchVoiceDemo?: () => void;
 }
 
 export const VideoGuideModal: React.FC<VideoGuideModalProps> = ({
   isOpen,
   onClose,
-  onJumpToSection
+  onJumpToSection,
+  onLaunchVoiceDemo,
 }) => {
   if (!isOpen) return null;
 
@@ -41,7 +43,7 @@ export const VideoGuideModal: React.FC<VideoGuideModalProps> = ({
           </button>
         </div>
 
-        {/* Video Constraints Badge */}
+        {/* Video Constraints & AI Voice Demo Launcher */}
         <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-xl bg-neutral-950 border border-neutral-800 mb-6 text-xs sm:text-sm">
           <div className="flex items-center space-x-2 text-rose-400">
             <Clock className="w-4 h-4" />
@@ -49,12 +51,20 @@ export const VideoGuideModal: React.FC<VideoGuideModalProps> = ({
           </div>
           <div className="flex items-center space-x-2 text-emerald-400">
             <CheckCircle2 className="w-4 h-4" />
-            <span>25+ Real People Preloaded & Ready</span>
+            <span>25+ Real People Preloaded</span>
           </div>
-          <div className="flex items-center space-x-2 text-amber-400">
-            <Sparkles className="w-4 h-4" />
-            <span>Profile Analysis → Live Dates → Rankings</span>
-          </div>
+          {onLaunchVoiceDemo && (
+            <button
+              onClick={() => {
+                onClose();
+                onLaunchVoiceDemo();
+              }}
+              className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-rose-600 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-bold flex items-center space-x-1.5 transition shadow"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Launch 3-Min AI Voice Bot</span>
+            </button>
+          )}
         </div>
 
         {/* Timeline Script */}
@@ -192,20 +202,34 @@ export const VideoGuideModal: React.FC<VideoGuideModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-2 border-t border-neutral-800">
-          <p className="text-xs text-neutral-400">
-            Ready to record? Follow this 3-minute sequence for the highest grade.
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-neutral-800">
+          <p className="text-xs text-neutral-400 text-center sm:text-left">
+            Ready to present or record? Use the automated AI voice bot or jump to any section.
           </p>
-          <button
-            onClick={() => {
-              onClose();
-              onJumpToSection('people');
-            }}
-            className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-medium text-sm flex items-center space-x-2 transition shadow-lg shadow-rose-900/30"
-          >
-            <Play className="w-4 h-4" />
-            <span>Begin Demo Tour</span>
-          </button>
+          <div className="flex items-center space-x-2">
+            {onLaunchVoiceDemo && (
+              <button
+                onClick={() => {
+                  onClose();
+                  onLaunchVoiceDemo();
+                }}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-rose-600 via-rose-500 to-amber-500 hover:from-rose-500 hover:to-amber-400 text-white font-semibold text-xs sm:text-sm flex items-center space-x-1.5 transition shadow-lg shadow-rose-950/40"
+              >
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Start AI Voice Demo</span>
+              </button>
+            )}
+            <button
+              onClick={() => {
+                onClose();
+                onJumpToSection('people');
+              }}
+              className="px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-medium text-xs sm:text-sm flex items-center space-x-1.5 transition border border-neutral-700"
+            >
+              <Play className="w-3.5 h-3.5" />
+              <span>Manual Tour</span>
+            </button>
+          </div>
         </div>
 
       </div>

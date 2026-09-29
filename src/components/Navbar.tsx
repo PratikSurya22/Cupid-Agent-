@@ -8,6 +8,8 @@ interface NavbarProps {
   onOpenTechStack: () => void;
   onOpenVideoGuide: () => void;
   onOpenHowItWorks: () => void;
+  onToggleVoiceDemo: () => void;
+  isVoiceDemoActive: boolean;
   totalPeopleCount: number;
 }
 
@@ -18,6 +20,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenTechStack,
   onOpenVideoGuide,
   onOpenHowItWorks,
+  onToggleVoiceDemo,
+  isVoiceDemoActive,
   totalPeopleCount,
 }) => {
   return (
@@ -92,6 +96,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Right Action Area */}
           <div className="flex items-center space-x-2 sm:space-x-3">
+            
+            {/* 3-Minute AI Voice Demo Launcher */}
+            <button
+              onClick={onToggleVoiceDemo}
+              className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition border ${
+                isVoiceDemoActive
+                  ? 'bg-rose-500/20 text-rose-300 border-rose-500/50 shadow-md shadow-rose-950/50'
+                  : 'bg-neutral-900 text-neutral-300 border-neutral-800 hover:text-white hover:bg-neutral-800'
+              }`}
+              title="Launch 3-Minute Video Demo with AI Voice Narrator"
+            >
+              <span className="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+              <Video className="w-3.5 h-3.5 text-rose-400" />
+              <span className="hidden sm:inline">3-Min AI Demo</span>
+            </button>
+
             <button
               onClick={onOpenHowItWorks}
               className="hidden lg:flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-medium text-neutral-300 hover:text-white hover:bg-neutral-900 border border-transparent hover:border-neutral-800 transition"
